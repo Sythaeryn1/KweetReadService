@@ -1,0 +1,13 @@
+version: '3.4'
+
+services:
+  kweetreadservice:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "80"
+  kweetwriteservice:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "80"

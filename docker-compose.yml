@@ -1,0 +1,87 @@
+version: '3.4'
+
+services:
+  rabbitmqkweet:
+    image: rabbitmq:3.11-management
+    hostname: rabbitmqkweet
+    ports:
+        - 5672:5672
+        - 15672:15672   
+    networks:
+        - kweetnetwork
+
+  kweetreadservice:
+    image: kweetreadservice
+    ports:
+        - "7080:80"
+    build:
+      context: .
+      dockerfile: KweetReadService/Dockerfile
+    depends_on:
+        - mongodb
+        - rabbitmqkweet
+    networks:
+        - kweetnetwork
+
+  mongodb:
+    image: mongodb/mongodb-community-server:6.0-ubi8
+    container_name: mongodb
+    restart: always
+    volumes:
+        - type: bind
+          source: ./data
+          target: /data/db
+    ports:
+        - "27017:27017"
+    networks:
+        - kweetnetwork
+  
+  kweetwriteservice:
+    image: kweetwriteservice
+    ports:
+        - "9080:80"
+    build:
+      context: .
+      dockerfile: KweetWriteService/Dockerfile
+    depends_on:
+        - db
+        - rabbitmqkweet
+    networks:
+        - kweetnetwork
+
+  pgadmin4:
+    image: dpage/pgadmin4
+    container_name: pgadmin4
+    restart: always
+    ports:
+        - "8080:80"
+    volumes:
+        - pgadmin_data:/var/lib/postgresql/data
+    environment:
+        PGADMIN_DEFAULT_EMAIL: 392873@student.fontys.nl
+        PGADMIN_DEFAULT_PASSWORD: password
+    networks:
+        - kweetnetwork
+
+  db:
+    image: postgres
+    container_name: pgsql
+    restart: always
+    ports:
+        - 5432:5432
+    volumes:
+        - db_volume:/var/lib/postgresql/data
+    environment:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: password
+        POSTGRES_DB: kweetdb
+    networks:
+        - kweetnetwork
+
+volumes:
+    db_volume:
+    pgadmin_data:
+
+networks:
+  kweetnetwork:
+    driver: bridge 
