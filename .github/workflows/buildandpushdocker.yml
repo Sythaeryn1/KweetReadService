@@ -40,7 +40,7 @@ jobs:
         context: .
         file: ./KweetReadService/Dockerfile
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/kweetcqrs:latest
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/kweetread:latest
     
     - name: Build and push write
       uses: docker/build-push-action@v4
@@ -48,4 +48,4 @@ jobs:
         context: .
         file: ./KweetWriteService/Dockerfile
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/kweetcqrs:latest
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/kweetwrite:latest
