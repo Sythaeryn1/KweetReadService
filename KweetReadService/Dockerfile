@@ -6,10 +6,10 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["KweetReadService.csproj", "."]
-RUN dotnet restore "./KweetReadService.csproj"
+COPY ["KweetReadService/KweetReadService.csproj", "KweetReadService/"]
+RUN dotnet restore "KweetReadService/KweetReadService.csproj"
 COPY . .
-WORKDIR "/src/."
+WORKDIR "/src/KweetReadService"
 RUN dotnet build "KweetReadService.csproj" -c Release -o /app/build
 
 FROM build AS publish
